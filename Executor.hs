@@ -1,39 +1,35 @@
 module Executor where
-import Data.Maybe
 import Types 
 
-entryPoint :: Label
-entryPoint = Lab 0
-
-errHalt :: Label
-errHalt = (Lab $ -1)
-
-numReg :: Int
-numReg = 3
-
-regList :: [Register]
-regList = map (\i -> Reg i) [0..numReg - 1]
-
-initConf :: Configuration
-initConf = (entryPoint, regVals)
-    where
-        regVals = zip regList (repeat 0)
+import Control.Monad.State
+import Data.Maybe
+import qualified Data.Map as M
 
 
---------------------------------------------------------------------------------
+-- If a referenced register doesn't exist in the configuration, 
+-- the instruction is ignored
+runInstr :: Instruction -> State Configuration Label
+runInstr (Inc r l) = do
+    st <- get
+    put st { regVals = M.update (\a -> Just $ a + 1) r $ regVals st }
+    return l
+runInstr (Dec r l1 l2) = do
+    rvs <- gets regVals
+    let oldVal = fromJust $ M.lookup r rvs
+    if (oldVal == 0)
+        then return l2
+        else do
+            st <- get
+            put st { regVals = M.update (\a -> Just $ a - 1) r $ regVals st }
+            return l1
+runInstr Halt = return EndLabel
 
-execute :: State -> State
-execute s@(p, (l, rs))
-    | instr == Nothing = (p, (errHalt, rs))
-    | otherwise        = (p, (executeInstr (fromJust instr) rs))
-    where
-        instr = lookup l p
-
--- TODO
-executeInstr :: Instruction -> [(Register, Int)] -> Configuration
-executeInstr (Inc r l) rs
-    = initConf
-executeInstr (Dec r l1 l2) rs
-    = initConf
-executeInstr Halt _
-    = initConf
+runLabel :: Label -> Program -> State Configuration Label
+runLabel l@(Lab n) p = do
+    let i = M.lookup l p
+    case i of
+        Nothing -> return ErrHalt
+        Just i' -> do
+                     l' <- runInstr i'
+                     return l'
+runLabel hlt _ = return hlt
