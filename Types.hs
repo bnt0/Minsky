@@ -9,15 +9,12 @@ data Register = Reg Int
     deriving (Eq, Ord)
 type Program = M.Map Label Instruction
 
-data Configuration = Configuration {
-    label   :: Label,
-    regVals :: M.Map Register Int
-}
+type Configuration = (Label, RegVals)
 
-startConfig = Configuration {
-    label   = Lab 0,
-    regVals = M.fromList $ take 10 [(Reg r, 0) | r <- [0..]]
-}
+type RegVals = M.Map Register Int
+
+emptyRegs :: Int -> RegVals
+emptyRegs numRegs = M.fromList $ take numRegs [(Reg r, 0) | r <- [0..]]
 
 data Pair = DPair Pair Pair | SPair Pair Pair | Num Int
     deriving (Show, Eq)
