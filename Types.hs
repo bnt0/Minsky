@@ -3,7 +3,7 @@ import qualified Data.Map as M
 
 data Instruction = Inc Register Label | Dec Register Label Label | Halt
     deriving Eq
-data Label = Lab Int | EndLabel | ErrHalt 
+data Label = Lab Int | EndLabel | ErrHalt
     deriving (Eq, Ord)
 data Register = Reg Int
     deriving (Eq, Ord)
@@ -30,4 +30,5 @@ instance Show Label where
     show (Lab i)    = "L" ++ show i
 
 showConfig :: Configuration -> String
-showConfig (l, rvs) = "(" ++ show l ++ ", " ++ show (M.toAscList rvs) ++ ")"
+showConfig (l, rvs) = "(" ++ show l ++ " "
+                      ++ unwords (map (show . snd) (M.toAscList rvs)) ++ ")"
