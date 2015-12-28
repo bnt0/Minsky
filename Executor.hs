@@ -35,7 +35,7 @@ runLabel l@(Lab n) p =
             else do
                 l'' <- runLabel l' p
                 return l''
-runLabel hlt _ = return hlt
+runLabel ErrHalt _ = return ErrHalt
 
 
 execute :: Configuration -> Program -> Configuration
