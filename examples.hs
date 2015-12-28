@@ -22,7 +22,7 @@ prog1 = M.fromList
     , (Lab 4, Inc (Reg 0) (Lab 1))
     , (Lab 5, Inc (Reg 2) (Lab 6))
     , (Lab 6, Dec (Reg 3) (Lab 5) (Lab 0))
-    , (Lab 8, Halt) ]
+    , (Lab 7, Halt) ]
 
 
 conf1 :: Configuration
@@ -34,3 +34,5 @@ conf1 = ((Lab 0), rvs)
             , ((Reg 2), 0)
             , ((Reg 3), 0)
             ]
+
+
