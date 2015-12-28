@@ -16,8 +16,7 @@ runInstr (Inc r l) = do
 runInstr (Dec r l1 l2) = do
     rvs <- get
     let oldVal = fromJust $ M.lookup r rvs
-    if (oldVal == 0)
-        then return l2
+    if (oldVal == 0) then return l2
     else do
         put $ M.update (\a -> Just $ a - 1) r rvs
         return l1
@@ -30,8 +29,7 @@ runLabel l@(Lab n) p =
         Nothing -> return ErrHalt
         Just i' -> do
             l'  <- runInstr i'
-            if (l' == EndLabel) 
-                then return l 
+            if (l' == EndLabel) then return l 
             else do
                 l'' <- runLabel l' p
                 return l''
