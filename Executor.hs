@@ -39,5 +39,5 @@ runLabel ErrHalt _ = return ErrHalt
 
 
 execute :: Configuration -> Program -> Configuration
-execute conf@(l,rvs) p
+execute (l,rvs) p
     = runState (runLabel l p) rvs

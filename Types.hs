@@ -26,7 +26,8 @@ instance Show Instruction where
 instance Show Register where
     show (Reg i) = "R" ++ show i
 instance Show Label where
-    show EndLabel   = "HALT"
     show ErrHalt    = "ERRHALT"
     show (Lab i)    = "L" ++ show i
 
+showConfig :: Configuration -> String
+showConfig (l, rvs) = "(" ++ show l ++ ", " ++ show (M.toAscList rvs) ++ ")"

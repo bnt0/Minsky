@@ -1,7 +1,6 @@
 module Translator where
 import Types
 
-import Data.Bits
 import qualified Data.Map as M
 
 -- TODO rewrite using Data.Bits
