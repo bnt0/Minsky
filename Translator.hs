@@ -4,6 +4,7 @@ import Types
 import qualified Data.Map as M
 
 -- TODO rewrite using Data.Bits
+
 eval :: Pair -> Int
 eval (Num i) = i
 eval (DPair p1 p2) = 2^x * (2*y + 1)
@@ -27,12 +28,19 @@ intToInstr x
             regNum = (y `div` 2)
             SPair (Num t) (Num f) = intToSPair z
 
+-- TODO
+instrToInt :: Instruction -> Int
+instrToInt Halt = 0
+instrToInt (Inc (Reg regNum) (Lab l)) = 1 --TODO
+instrToInt (Dec (Reg regNum) (Lab l1) (Lab l2)) = 2 --TODO
+
+
 intToDPair :: Int -> Pair
 intToDPair i
     = DPair (Num x) (Num y)
         where
             x = greatestTwosPowerDivisor i 
-            y = ((i `div` (2^x)) - 1) `div` 2
+            y = ((i `div` (2 ^ x)) - 1) `div` 2
 
 intToSPair :: Int -> Pair
 intToSPair i
@@ -40,6 +48,17 @@ intToSPair i
         where
             x = greatestTwosPowerDivisor (i + 1)
             y = (((i + 1) `div` (2 ^ x)) - 1) `div` 2
+
+
+-- TODO
+pairToInt :: Pair -> Int
+pairToInt (Num n) = n
+pairToInt (DPair x y)
+    = ((y' * 2) + 1) * 2^x'
+        where
+            x' = pairToInt x
+            y' = pairToInt y
+pairToInt (SPair x y) = -2
 
 -- Pre: i > 0
 greatestTwosPowerDivisor :: Int -> Int
@@ -70,3 +89,8 @@ codeToProgram c
         where
             instrList = map intToInstr $ intToIntList c 
             labelList = map (\ x -> (Lab x)) [0..]
+
+programToCode :: Program -> Int
+programToCode p
+-- TODO implement
+    = 0
