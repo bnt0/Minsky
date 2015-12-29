@@ -8,19 +8,19 @@ import qualified Data.Map as M
 
 -- If a referenced register doesn't exist in the configuration, 
 -- the instruction is ignored
-runInstr :: Instruction -> State RegVals Label
+runInstr :: Instruction -> State RegVals (Maybe Label)
 runInstr (Inc r l) = do
     rvs <- get
     put $ M.update (\a -> Just $ a + 1) r rvs
-    return l
+    return (Just l)
 runInstr (Dec r l1 l2) = do
     rvs <- get
     let oldVal = fromJust $ M.lookup r rvs
-    if (oldVal == 0) then return l2
+    if (oldVal == 0) then return $ Just l2
     else do
         put $ M.update (\a -> Just $ a - 1) r rvs
-        return l1
-runInstr Halt = return EndLabel
+        return (Just l1)
+runInstr Halt = return Nothing
 
 
 runLabel :: Label -> Program -> State RegVals Label
@@ -29,10 +29,11 @@ runLabel l@(Lab n) p =
         Nothing -> return ErrHalt
         Just i' -> do
             l'  <- runInstr i'
-            if (l' == EndLabel) then return l 
-            else do
-                l'' <- runLabel l' p
-                return l''
+            case l' of
+                Nothing  -> return l
+                Just l'' -> do
+                    l''' <- runLabel l'' p
+                    return l''
 runLabel ErrHalt _ = return ErrHalt
 
 

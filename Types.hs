@@ -3,7 +3,7 @@ import qualified Data.Map as M
 
 data Instruction = Inc Register Label | Dec Register Label Label | Halt
     deriving Eq
-data Label = Lab Int | EndLabel | ErrHalt
+data Label = Lab Int | ErrHalt
     deriving (Eq, Ord)
 data Register = Reg Int
     deriving (Eq, Ord)
