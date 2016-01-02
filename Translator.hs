@@ -28,11 +28,13 @@ intToInstr x
             regNum = (y `div` 2)
             SPair (Num t) (Num f) = intToSPair z
 
--- TODO
 instrToInt :: Instruction -> Int
-instrToInt Halt = 0
-instrToInt (Inc (Reg regNum) (Lab l)) = 1 --TODO
-instrToInt (Dec (Reg regNum) (Lab l1) (Lab l2)) = 2 --TODO
+instrToInt Halt 
+    = 0
+instrToInt (Inc (Reg regNum) (Lab l))
+    = pairToInt (DPair (Num $ 2 * regNum) (Num l))
+instrToInt (Dec (Reg regNum) (Lab l1) (Lab l2))
+    = pairToInt (DPair (Num $ 2 * regNum + 1) (SPair (Num l1) (Num l2)))
 
 
 intToDPair :: Int -> Pair
@@ -50,15 +52,19 @@ intToSPair i
             y = (((i + 1) `div` (2 ^ x)) - 1) `div` 2
 
 
--- TODO
 pairToInt :: Pair -> Int
 pairToInt (Num n) = n
 pairToInt (DPair x y)
-    = ((y' * 2) + 1) * 2^x'
+    = 2^x' * (y' * 2 + 1)
         where
             x' = pairToInt x
             y' = pairToInt y
-pairToInt (SPair x y) = -2
+pairToInt (SPair x y)
+    = 2^x' * (y' * 2 + 1) - 1
+        where
+            x' = pairToInt x
+            y' = pairToInt y
+
 
 -- Pre: i > 0
 greatestTwosPowerDivisor :: Int -> Int
@@ -92,5 +98,4 @@ codeToProgram c
 
 programToCode :: Program -> Int
 programToCode p
--- TODO implement
-    = 0
+    = intListToInt $ map (instrToInt . snd) (M.toAscList p) 
