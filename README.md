@@ -7,7 +7,7 @@ Simple emulator for Minsky's register machines
 \*Executor> execute conf prog
 ````
 
-* Translate binary code for the universal register machine to Haskell data structures using `codeToProgram`
+* Translate binary code to Haskell data structures using `codeToProgram`
 ````
 \*Translator> codeToProgram 1234
 [ (L0,R0+ -> L0)
@@ -17,8 +17,9 @@ Simple emulator for Minsky's register machines
 , (L4,R0- -> L0, L0) ]
 ````
 
-## TODO
 * Translate data structures to program code
+
+## TODO
 * Parse code
 * Parse gadgets
 * Graphical representation of programs (LaTex)
