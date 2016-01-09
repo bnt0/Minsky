@@ -4,24 +4,21 @@ import Types
 import Text.Parsec 
 import Data.Map (fromList)
 
-runParser :: String -> Either ParseError Program
-runParser s = parse program "Parse error in source" s
+runParser :: String -> SourceName -> Either ParseError Program
+runParser fp s = parse program fp s
 
 program :: Parsec String () Program
 program = do
     spaces
-    prog <- many labelledInstr
+    prog <- many (labelledInstr <* newline)
     spaces
     eof
     return $ fromList prog
         where
             labelledInstr = do
                 l <- instLabel
-                spaces
-                char ':'
-                spaces
+                spaces ; char ':' ; spaces
                 i <- (haltInstruction <|> regInstruction) 
-                newline
                 return (l, i)
 
 regInstruction :: Parsec String () Instruction
