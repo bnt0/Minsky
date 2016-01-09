@@ -4,8 +4,8 @@ import Types
 import Text.Parsec 
 import Data.Map (fromList)
 
-runParser :: String -> SourceName -> Either ParseError Program
-runParser fp s = parse program fp s
+parseProgram :: String -> SourceName -> Either ParseError Program
+parseProgram fp s = parse program fp s
 
 program :: Parsec String () Program
 program = do
