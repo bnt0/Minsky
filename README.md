@@ -1,5 +1,5 @@
 # Minsky
-Simple emulator for Minsky's register machines
+Simple emulator for [Minsky's register machines](http://www.igblan.free-online.co.uk/igblan/ca/minsky.html).
 
 ## Features
 * Emulate register machines with supplied configuration `conf` and program     `prog`
